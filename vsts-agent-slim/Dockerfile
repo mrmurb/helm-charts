@@ -54,6 +54,12 @@ RUN curl https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-p
 RUN dotnet help
 ENV dotnet=/usr/bin/dotnet
 
+# Add OpenJDK 8
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends openjdk-8-jdk \
+ && rm -rf /var/lib/apt/lists/*
+RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
 # Install LTS Node.js and related tools
 RUN curl -sL https://git.io/n-install | bash -s -- -ny - \
     && ~/n/bin/n lts \
