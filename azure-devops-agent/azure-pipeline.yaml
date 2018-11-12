@@ -9,4 +9,4 @@ variables:
 steps:
 - script: |
     cd azure-devops-agent
-    docker build . -t ${imageName}
+    docker build -f Dockerfile -t $(imageName)
