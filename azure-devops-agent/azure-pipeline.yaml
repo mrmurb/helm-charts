@@ -6,7 +6,18 @@ pool:
 variables:
   imageName: mrmurb/azure-devops-agent:latest
 
-steps:
-- script: |
-    cd azure-devops-agent
-    docker build -f Dockerfile -t $(imageName) .
+jobs:
+- job: BuildAndPush
+  displayName: Build and Push Docker image
+  steps:
+  - script: |
+      cd azure-devops-agent
+      docker build -f Dockerfile -t $(imageName) .
+    displayName: Build image
+    name: build
+    continueOnError: false
+  - script: |
+      cd azure-devops-agent
+      docker push $(dockerId)/$(imageName)
+    displayName: Push image to Docker Hub
+    condition: succeeded()
