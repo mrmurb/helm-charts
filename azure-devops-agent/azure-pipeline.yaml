@@ -1,0 +1,12 @@
+pool:
+  name: 'Kubernetes Agents'
+  demands:
+    - docker
+
+variables:
+  imageName: mrmurb/azure-devops-agent:latest
+
+steps:
+- script: |
+    cd azure-devops-agent
+    docker build . -t ${imageName}

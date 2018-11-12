@@ -35,4 +35,21 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /etc/apt/sources.list.d/*
 
+# Kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
+    && chmod +x ./kubectl \
+    && mv ./kubectl /usr/local/bin/kubectl
+
+# Helm
+RUN curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+
+# Docker
+ENV DOCKER_CHANNEL stable
+ENV DOCKER_VERSION 17.06.0-ce
+RUN set -ex \
+    && curl -fL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/`uname -m`/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
+    && tar --extract --file docker.tgz --strip-components 1 --directory /usr/local/bin \
+    && rm docker.tgz \
+    && docker -v
+
 CMD ["./start.sh"]
