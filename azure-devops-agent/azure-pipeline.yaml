@@ -1,14 +1,13 @@
-pool:
-  name: 'Kubernetes Agents'
-  demands:
-    - docker
-
 variables:
   imageName: mrmurb/azure-devops-agent:latest
 
 jobs:
 - job: BuildAndPush
   displayName: Build and Push Docker image
+  pool:
+    name: 'Kubernetes Agents'
+    demands:
+      - docker
   steps:
   - script: |
       cd azure-devops-agent
