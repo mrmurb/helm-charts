@@ -15,7 +15,7 @@ jobs:
     displayName: Build image
     name: build
     continueOnError: false
-  - scripts: |
+  - script: |
       docker login -u $(dockerId) -p $(dockerPassword)
       docker push $(dockerId)/$(imageName)
     displayName: Push image to Docker Hub
