@@ -1,5 +1,5 @@
 variables:
-  imageName: mrmurb/azure-devops-agent:latest
+  imageName: azure-devops-agent:latest
 
 jobs:
 - job: BuildAndPush
@@ -11,12 +11,12 @@ jobs:
   steps:
   - script: |
       cd azure-devops-agent
-      docker build -f Dockerfile -t $(imageName) .
+      docker build -f Dockerfile -t $(dockerId)/$(imageName) .
     displayName: Build image
     name: build
     continueOnError: false
-  - script: |
-      cd azure-devops-agent
+  - scripts: |
+      docker login -u $(dockerId) -p $(dockerPassword)
       docker push $(dockerId)/$(imageName)
     displayName: Push image to Docker Hub
     condition: succeeded()
