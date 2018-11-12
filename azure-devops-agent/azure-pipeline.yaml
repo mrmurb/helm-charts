@@ -1,3 +1,5 @@
+trigger: none # untill sorted
+
 variables:
   imageName: azure-devops-agent:latest
 
