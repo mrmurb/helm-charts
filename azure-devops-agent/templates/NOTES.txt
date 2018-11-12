@@ -1,0 +1,3 @@
+Build agents deployed to:
+ Azure DevOps Account: {{ $.Values.azure.account}}
+ Agent Pool: {{ $.Values.azure.agentPool }}
