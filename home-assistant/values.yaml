@@ -49,6 +49,13 @@ tolerations: []
 
 affinity: {}
 
+persistentVolume:
+  enabled: false
+  annotations: {}
+  # existingClaim:
+  # accessModes: {}
+  # size: 
+
 serverFiles:
   # Configuration files according to the structure of Home Assistant
   # configuration.yaml:
