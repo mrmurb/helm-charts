@@ -19,6 +19,8 @@ spec:
         app.kubernetes.io/name: {{ include "home-assistant.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      template:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
