@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-config
+  labels:
+    app.kubernetes.io/name: {{ include "home-assistant.name" . }}
+    helm.sh/chart: {{ include "home-assistant.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+{{- range $key, $val := .Values.serverFiles }}
+  {{ $key }}: |
+{{ toYaml $val | default "{}" | indent 4 }}
+{{ end -}}
