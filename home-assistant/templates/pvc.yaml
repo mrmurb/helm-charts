@@ -13,14 +13,14 @@ metadata:
     helm.sh/chart: {{ include "home-assistant.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-  spec:
-    accessModes:
+spec:
+  accessModes:
 {{- range .Values.persistentVolume.accessModes }}
     - {{ . | quote }}
 {{- end }}
-    resources:
-      requests:
-        storage: {{ default "1Gi" .Values.persistentVolume.size | quote }}
+  resources:
+    requests:
+      storage: {{ default "1Gi" .Values.persistentVolume.size | quote }}
 {{- if .Values.persistentVolume.storageClass }}
 {{- if (eq "-" .Values.persistentVolume.storageClass) }}
   storageClassName: ""
