@@ -8,12 +8,14 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
+{{- range $key, $val := .Values.serverFiles -}}
+{{ if eq $key "configuration.yaml"}}
   configuration.yaml: |
     http:
       api_password: !env_var API_KEY
-{{- range $key, $val := .Values.serverFiles }}
-{{ if ne $key "configuration.yaml" }}
-  {{ $key }}: |
-{{ end -}}
 {{ toYaml $val | default "{}" | indent 4 }}
-{{- end -}}
+{{ else }}
+  {{ $key }}: |
+{{ toYaml $val | default "{}" | indent 4 }}
+{{- end }}
+{{- end }}
