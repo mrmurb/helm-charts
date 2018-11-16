@@ -12,8 +12,6 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
-apiToken: ""
-
 service:
   type: ClusterIP
   port: 80
@@ -56,8 +54,13 @@ persistentVolume:
   # accessModes: {}
   # size: 
 
-serverFiles:
-  # Configuration files according to the structure of Home Assistant
-  # configuration.yaml:
-  #  homeassistant:
-  #   name: ExampleName
+configuration:
+  # Enable to use ConfigMap as configuration storage.
+  # This implementation uses subPath, pods will not receive ConfigMap updates unless restarted.
+  enabled: false
+  apiToken: ""
+  serverFiles:
+    # Configuration files according to the structure of Homeassistant
+    # configuration.yaml:
+    #  homeassistant:
+    #   name: ExampleName

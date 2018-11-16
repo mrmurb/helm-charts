@@ -14,7 +14,9 @@ spec:
       app.kubernetes.io/name: {{ include "home-assistant.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
+    {{- if .Values.configuration.enabled }}
     checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    {{ end }}
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "home-assistant.name" . }}
@@ -24,12 +26,14 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.configuration.enabled }}
           env:
             - name: API_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "home-assistant.fullname" . }}-api-token
                   key: token
+          {{ end }}
           ports:
             - name: http
               containerPort: 8123
@@ -47,7 +51,7 @@ spec:
           volumeMounts:
             - name: storage-volume
               mountPath: /config
-            {{- range $key, $value := .Values.serverFiles }}
+            {{- range $key, $value := .Values.configuration.serverFiles }}
             - name: config-volume
               mountPath: "/config/{{ $key }}"
               subPath: "{{ $key }}"

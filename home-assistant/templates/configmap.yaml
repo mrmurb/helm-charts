@@ -1,3 +1,4 @@
+{{- if .Values.configuration.enabled -}}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -8,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-{{- range $key, $val := .Values.serverFiles -}}
+{{- range $key, $val := .Values.configuration.serverFiles -}}
 {{ if eq $key "configuration.yaml"}}
   configuration.yaml: |
     http:
@@ -19,3 +20,4 @@ data:
 {{ toYaml $val | default "{}" | indent 4 }}
 {{- end }}
 {{- end }}
+{{- end -}}
