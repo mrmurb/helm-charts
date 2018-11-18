@@ -1,0 +1,30 @@
+{{- if .Values.persistentVolume.enabled -}}
+{{- if not .Values.persistentVolume.existingClaim -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+  {{- if .Values.persistentVolume.annotations }}
+{{ toYaml .Values.persistentVolume.annotations | indent 4 }}
+  {{- end }}
+  name: {{ include "homeassistant.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "homeassistant.name" . }}
+    helm.sh/chart: {{ include "homeassistant.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  accessModes:
+    - "ReadWriteMany"
+  resources:
+    requests:
+      storage: {{ default "8Gi" .Values.persistentVolume.size | quote }}
+{{- if .Values.persistentVolume.storageClass }}
+{{- if (eq "-" .Values.persistentVolume.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistentVolume.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end -}}
+{{- end -}}

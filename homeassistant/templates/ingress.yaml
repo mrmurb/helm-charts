@@ -34,5 +34,9 @@ spec:
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
+          - path: {{ $ingressPath }}config
+            backend:
+              serviceName: {{ $fullName }}-configurator
+              servicePort: http
   {{- end }}
 {{- end }}

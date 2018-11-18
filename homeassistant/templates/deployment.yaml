@@ -20,20 +20,45 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .Chart.Name }}-configurator
+          image: "{{ .Values.image.configurator.repository }}:{{ .Values.image.configurator.tag}}"
+          imagePullPolicy: {{ .Values.image.configurator.pullPolicy }}
+          env:
+            - name: HC_HASS_API_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "homeassistant.fullname" . }}-secret
+                  key: api_key
+            - name: HC_HASS_URL
+              value: "http://{{ template "homeassistant.fullname" . }}:8123/api/"
+            - name: HC_BASEPATH
+              value: "/hass-config"
+            - name: HC_GIT
+              value: "false"
+            - name: HC_ENFORCE_BASEPATH
+              value: "true"
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 3218
               protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /hass-config
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.server.repository }}:{{ .Values.image.server.tag }}"
+          imagePullPolicy: {{ .Values.image.server.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8123
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: http
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: http
           resources:
 {{ toYaml .Values.resources | indent 12 }}
@@ -48,4 +73,16 @@ spec:
     {{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+      - name: config-volume
+    {{- if .Values.persistentVolume.enabled }}
+        persistentVolumeClaim:
+        {{- if .Values.persistentVolume.existingClaim -}}
+          claimName: {{ .Values.persistentVolume.existingClaim }}
+        {{ else }}
+          claimName: {{ include "homeassistant.fullname" . }}
+        {{- end }}
+    {{ else }}
+        emptyDir: {}
     {{- end }}

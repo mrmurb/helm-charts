@@ -8,10 +8,30 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.server.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.server.port }}
+      targetPort: 8123
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "homeassistant.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-configurator
+  labels:
+    app.kubernetes.io/name: {{ include "homeassistant.name" . }}
+    helm.sh/chart: {{ include "homeassistant.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.configurator.type }}
+  ports:
+    - port: {{ .Values.service.configurator.port }}
+      targetPort: 3218
       protocol: TCP
       name: http
   selector:
