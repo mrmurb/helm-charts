@@ -18,6 +18,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 apiToken: ""
+hostNetwork: false # required for some homeassistant plugins eg. HomeKit
 
 service:
   server:
