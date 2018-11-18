@@ -5,16 +5,27 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+  server:
+    repository: homeassistant/home-assistant
+    tag: 0.82.1
+    pullPolicy: IfNotPresent
+  configurator:
+    repository: causticlab/hass-configurator-docker
+    tag: x86_64-0.3.3
+    pullPolicy: IfNotPresent
 
 nameOverride: ""
 fullnameOverride: ""
 
+apiToken: ""
+
 service:
-  type: ClusterIP
-  port: 80
+  server:
+    type: ClusterIP
+    port: 80
+  configurator:
+    type: ClusterIP
+    port: 80
 
 ingress:
   enabled: false
@@ -29,6 +40,10 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+persistentVolume:
+  enabled: false
+  # size: 8Gi
+  
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
