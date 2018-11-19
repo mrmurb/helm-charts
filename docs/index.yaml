@@ -1,13 +1,23 @@
 apiVersion: v1
 entries:
+  azure-devops-agent:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-11-19T18:50:45.797899+01:00
+    description: Agent for Azure DevOps
+    digest: 98db1107342a57671a9351fe92d1d66dc277066e3b16e0776c8986b033b9b980
+    name: azure-devops-agent
+    urls:
+    - https://mrmurb.github.io/helm-charts/azure-devops-agent-0.1.0.tgz
+    version: 0.1.0
   homeassistant:
   - apiVersion: v1
     appVersion: 0.82.1
-    created: 2018-11-19T18:41:53.374118+01:00
+    created: 2018-11-19T18:50:45.798186+01:00
     description: A Helm chart for Homeassistant
     digest: 1c5c56543244c7974e80dbcde041ebb3affc50ac43fe9ab6c65187ff1ca03541
     name: homeassistant
     urls:
     - https://mrmurb.github.io/helm-charts/homeassistant-0.9.0.tgz
     version: 0.9.0
-generated: 2018-11-19T18:41:53.373557+01:00
+generated: 2018-11-19T18:50:45.797325+01:00
